@@ -1,4 +1,4 @@
-import { useState } from "react";
+import  { useState } from "react";
 import {
   Button,
   Table,
@@ -12,6 +12,7 @@ import {
   PageTableEntry,
   Frame,
   LRUQueue,
+  FIFOQueue,
   handlePageRequest,
 } from "../utils/MemoryManager";
 
@@ -31,6 +32,7 @@ const MemoryManager = () => {
   const [frameCount, setFrameCount] = useState(2);
   const [alertMessage, setAlertMessage] = useState("");
   const [framesHistory, setFramesHistory] = useState([]);
+  const [algorithm, setAlgorithm] = useState("LRU");
 
   const handleSequenceChange = (e) => {
     setInputSequence(e.target.value);
@@ -46,6 +48,10 @@ const MemoryManager = () => {
     }
   };
 
+  const handleAlgorithmChange = (e) => {
+    setAlgorithm(e.target.value);
+  };
+
   const handleProcessSequence = () => {
     if (frameCount <= 0) {
       setAlertMessage("页帧数量必须是一个正整数");
@@ -59,7 +65,7 @@ const MemoryManager = () => {
       setAlertMessage("页面访问序列必须是有效的数值");
       return;
     }
-
+    setAlertMessage("");
     const newAccessSequence = [];
     const newPageFaults = [];
     const newReplacedPages = [];
@@ -71,8 +77,8 @@ const MemoryManager = () => {
       { length: 10 },
       (_, i) => new PageTableEntry(i)
     );
-    const lruQueue = new LRUQueue(); // 每次处理新序列时重置LRUQueue实例
-
+    const algorithmQueue = algorithm === "LRU" ? new LRUQueue() : new FIFOQueue();
+    
     const framesHistory = [];
 
     sequence.forEach((pageNumber) => {
@@ -80,7 +86,8 @@ const MemoryManager = () => {
         pageNumber,
         newPageTable,
         newFrames,
-        lruQueue
+        algorithmQueue,
+        algorithm
       );
       newAccessSequence.push(pageNumber);
       newPageFaults.push(pageFault);
@@ -150,6 +157,12 @@ const MemoryManager = () => {
             aria-label="页帧数量"
             className="mr-2"
           />
+        </Col>
+        <Col md={4} className="d-flex justify-content-center">
+          <Form.Control as="select" value={algorithm} onChange={handleAlgorithmChange}>
+            <option value="LRU">LRU</option>
+            <option value="FIFO">FIFO</option>
+          </Form.Control>
         </Col>
       </Row>
       {alertMessage && (

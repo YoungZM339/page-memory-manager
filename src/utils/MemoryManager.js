@@ -31,13 +31,29 @@ class LRUQueue {
     }
 }
 
-function handlePageRequest(pageNumber, pageTable, frames, lruQueue) {
+class FIFOQueue {
+    constructor() {
+        this.queue = [];
+    }
+
+    addPage(pageNumber) {
+        this.queue.push(pageNumber);
+    }
+
+    getFIFOPage() {
+        return this.queue.shift();
+    }
+}
+
+function handlePageRequest(pageNumber, pageTable, frames, algorithmQueue, algorithm) {
     const pageEntry = pageTable[pageNumber];
     let pageFault = false;
     let replacedPage = null;
 
     if (pageEntry.valid) {
-        lruQueue.accessPage(pageNumber);
+        if (algorithm === 'LRU') {
+            algorithmQueue.accessPage(pageNumber);
+        }
     } else {
         pageFault = true;
         const freeFrame = frames.find(frame => frame.pageNumber === null);
@@ -45,22 +61,36 @@ function handlePageRequest(pageNumber, pageTable, frames, lruQueue) {
             freeFrame.pageNumber = pageNumber;
             pageEntry.frameNumber = freeFrame.frameNumber;
             pageEntry.valid = true;
-            lruQueue.accessPage(pageNumber);
+            if (algorithm === 'LRU') {
+                algorithmQueue.accessPage(pageNumber);
+            } else if (algorithm === 'FIFO') {
+                algorithmQueue.addPage(pageNumber);
+            }
         } else {
-            const lruPage = lruQueue.getLRUPage();
-            replacedPage = lruPage;
-            const lruPageEntry = pageTable[lruPage];
-            const frameToReplace = frames.find(frame => frame.pageNumber === lruPage);
+            let replacedPageNumber;
+            if (algorithm === 'LRU') {
+                replacedPageNumber = algorithmQueue.getLRUPage();
+            } else if (algorithm === 'FIFO') {
+                replacedPageNumber = algorithmQueue.getFIFOPage();
+            }
+            replacedPage = replacedPageNumber;
+            const replacedPageEntry = pageTable[replacedPageNumber];
+            const frameToReplace = frames.find(frame => frame.pageNumber === replacedPageNumber);
 
             frameToReplace.pageNumber = pageNumber;
             pageEntry.frameNumber = frameToReplace.frameNumber;
             pageEntry.valid = true;
-            lruPageEntry.valid = false;
-            lruPageEntry.frameNumber = null;
-            lruQueue.accessPage(pageNumber);
+            replacedPageEntry.valid = false;
+            replacedPageEntry.frameNumber = null;
+            if (algorithm === 'LRU') {
+                algorithmQueue.accessPage(pageNumber);
+            } else if (algorithm === 'FIFO') {
+                algorithmQueue.addPage(pageNumber);
+            }
         }
     }
 
     return { pageFault, replacedPage };
 }
-export { PageTableEntry, Frame, LRUQueue, handlePageRequest };
+
+export { PageTableEntry, Frame, LRUQueue, FIFOQueue, handlePageRequest };
