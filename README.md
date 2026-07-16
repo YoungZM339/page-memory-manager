@@ -1,8 +1,26 @@
-# React + Vite
+# Page Memory Manager
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A JavaScript application for experimenting with page-memory management concepts and interactive behavior.
 
-Currently, two official plugins are available:
+## Project goals
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- make page-memory state visible and understandable
+- separate UI state from the underlying management logic
+- provide a small, runnable example for future experiments
+
+## Local development
+
+~~~bash
+npm install
+npm run dev
+~~~
+
+Use npm run to inspect the scripts available in this repository. Production builds should be tested before deployment.
+
+## Contributing
+
+Keep the demo deterministic, document state transitions, and add regression coverage when changing the management logic. Do not commit browser caches or local environment files.
+
+## Status
+
+Experimental project; APIs and UI may change without compatibility guarantees.
