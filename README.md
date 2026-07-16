@@ -1,42 +1,42 @@
 # Page Memory Manager
 
-一个基于 React 和 Vite 的页面置换算法可视化工具。它模拟 FIFO 与 LRU 两种策略，并逐步展示页框状态、缺页和被替换页面。
+A page-replacement algorithm visualizer built with React and Vite. It simulates FIFO and LRU strategies and shows frame states, page faults, and replaced pages step by step.
 
-## 功能
+## Features
 
-- 输入逗号分隔的页面访问序列。
-- 设置并校验页框数量。
-- 随机生成访问序列。
-- 在 FIFO 和 LRU 之间切换。
-- 展示每一步的缺页、被替换页面和帧历史。
+- Enter comma-separated page-reference sequences.
+- Set and validate the number of frames.
+- Generate random reference sequences.
+- Switch between FIFO and LRU.
+- Display each step's page fault, replaced page, and frame history.
 
-## 技术栈
+## Technology Stack
 
 - React 18
 - Vite
 - React Bootstrap
 
-## 本地开发
+## Local Development
 
-仓库包含 pnpm 锁文件，建议使用 pnpm：
+The repository includes a pnpm lockfile, so pnpm is recommended:
 
     pnpm install
     pnpm dev
 
-其他常用命令：
+Other common commands:
 
     pnpm build
     pnpm lint
     pnpm preview
 
-## 使用说明
+## Usage
 
-在页面中输入页面访问序列和页框数量后，选择 FIFO 或 LRU 运行模拟。表格记录的是算法状态变化，不是操作系统或浏览器的真实内存状态。
+Enter a page-reference sequence and frame count, then select FIFO or LRU to run the simulation. The table records algorithm state changes; it is not a representation of real operating-system or browser memory.
 
-## 适用范围
+## Intended Use
 
-适合操作系统课程、算法演示和小规模实验。它不用于操作系统内存管理、性能压测或生产监控。
+Suitable for operating-systems courses, algorithm demonstrations, and small experiments. It is not an operating-system memory manager, a performance benchmark, or a production monitoring tool.
 
-## 许可证
+## License
 
-仓库当前未声明许可证。
+The repository currently has no declared license.
